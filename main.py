@@ -33,6 +33,10 @@ def index():
 
 @app.route("/predictgood", methods=['POST'])
 def do_prediction_good():
+    #load test.txt and print it out
+    with open('static/test.txt') as f:
+        print(f.read())
+
     json_data = request.get_json()
     json_data = {
         "age": json_data["age"],
@@ -51,15 +55,18 @@ def do_prediction_good():
     print("Current directory: " + os.getcwd())
     
     # predict
-    model = tf.keras.models.load_model('/static/diabetes_good_model.keras')
+    explainer = joblib.load(filename="/app/static/explainer_good.bz2")
+    shap_values = explainer.shap_values(df)
+
+    print("Explainer loaded" + shap_values)
+
+    model = tf.keras.models.load_model('/app/static/diabetes_good_model.keras')
     print("Model loaded")
         
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
     # shap
-    explainer = joblib.load(filename="/static/explainer_good.bz2")
-    shap_values = explainer.shap_values(df)
 
     i = 0
     shap.force_plot(explainer.expected_value[i], shap_values[i], df.iloc[i], matplotlib=True, show=False, plot_cmap=['#77dd77', '#f99191'])
@@ -92,12 +99,12 @@ def do_prediction_bad():
 
     # predict
 
-    model = tf.keras.models.load_model('/static/diabetes_bad_model.keras')
+    model = tf.keras.models.load_model('/app/static/diabetes_bad_model.keras')
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
     # shap
-    explainer = joblib.load(filename="/static/explainer_bad.bz2")
+    explainer = joblib.load(filename="/app/static/explainer_bad.bz2")
     shap_values = explainer.shap_values(df)
 
     i = 0
