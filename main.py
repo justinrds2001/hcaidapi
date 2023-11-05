@@ -70,14 +70,13 @@ def do_prediction_good():
         model = tf.keras.models.load_model("static/diabetes_good_model.h5")
     except Exception as e:
         print(f"An error occurred while loading the model: {str(e)}")
-
-    print("Model loaded" + model.summary())
-
-    print("IT REACHED THE EXPLAINER LOAD")
     
     # predict
-    with open("static/explainer_good.pkl", "rb") as explainer_file:
-        explainer = pickle.load(explainer_file)
+    try:
+        with open("static/explainer_good.pkl", "rb") as explainer_file:
+            explainer = pickle.load(explainer_file)
+    except Exception as e:
+        print(f"An error occurred while loading the explainer: {str(e)}")
 
     shap_values = explainer.shap_values(df)
 
