@@ -6,6 +6,8 @@ import shap
 import os
 import base64
 import io
+import pickle
+import bz2
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
@@ -55,12 +57,14 @@ def do_prediction_good():
     print("Current directory: " + os.getcwd())
     
     # predict
-    explainer = joblib.load(filename="/app/static/explainer_good.bz2")
+    with bz2.BZ2File("static/explainer_good.bz2", "rb") as file:
+        explainer = pickle.load(file)
     shap_values = explainer.shap_values(df)
 
+    print("IT REACHED HERE")
     print("Explainer loaded" + shap_values)
 
-    model = tf.keras.models.load_model('/app/static/diabetes_good_model.keras')
+    model = tf.keras.models.load_model("static/diabetes_good_model.h5")
     print("Model loaded")
         
     y_pred = model.predict(df)
@@ -99,12 +103,13 @@ def do_prediction_bad():
 
     # predict
 
-    model = tf.keras.models.load_model('/app/static/diabetes_bad_model.keras')
+    model = tf.keras.models.load_model('static/diabetes_bad_model.keras')
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
     # shap
-    explainer = joblib.load(filename="/app/static/explainer_bad.bz2")
+    with bz2.BZ2File("static/explainer_bad.bz2", "rb") as file:
+        explainer = pickle.load(file)
     shap_values = explainer.shap_values(df)
 
     i = 0
