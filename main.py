@@ -32,9 +32,10 @@ def do_prediction_good():
 
     # Print current working directory
     print("Current directory: " + os.getcwd())
-
+    
     # predict
     model = tf.keras.models.load_model('diabetes_good_model.keras')
+    print("Model loaded")
         
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
@@ -73,6 +74,7 @@ def do_prediction_bad():
     df = pd.DataFrame(json_data, index=[0])
 
     # predict
+
     model = tf.keras.models.load_model('diabetes_bad_model.keras')
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
