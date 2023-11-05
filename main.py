@@ -10,9 +10,23 @@ import tensorflow as tf
 
 app = Flask(__name__)
 
+def print_directories_recursive(directory):
+    for entry in os.scandir(directory):
+        if entry.is_dir():
+            print("📁 " + entry.name)  # Print the directory name
+            print_directories_recursive(entry.path)
+        else:
+            print("📃 " + entry.name)  # Print the file name
+
 @app.route('/')
 def index():
-  return render_template('index.html')
+    # Get the current working directory
+    current_directory = os.getcwd()
+
+    # Print directories and filenames recursively
+    print_directories_recursive(current_directory)
+
+    return render_template('index.html')
 
 @app.route("/predictgood", methods=['POST'])
 def do_prediction_good():
