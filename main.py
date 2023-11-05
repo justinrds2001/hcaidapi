@@ -72,14 +72,11 @@ def do_prediction_good():
         print(f"An error occurred while loading the model: {str(e)}")
 
     print("Model loaded" + model.summary())
-
-    # Print current working directory
-    print("Current directory: " + os.getcwd())
     
     # predict
     try:
-        with bz2.BZ2File("static/explainer_good.bz2", "rb") as file:
-            explainer = pickle.load(file)
+        with open("static/explainer_good.pkl", "rb") as explainer_file:
+            explainer = pickle.load(explainer_file)
     except Exception as e:
         print(f"An error occurred while loading the explainer: {str(e)}")
 
