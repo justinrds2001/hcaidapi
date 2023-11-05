@@ -6,6 +6,7 @@ import shap
 import os
 import base64
 import io
+import hashlib
 import pickle
 import bz2
 import matplotlib.pyplot as plt
@@ -23,6 +24,13 @@ def print_directory_structure(directory):
             else:
                 print("📃 " + entry.path)  # Print the file path
 
+def calculate_file_hash(file_path):
+    md5_hash = hashlib.md5()
+    with open(file_path, "rb") as f:
+        while chunk := f.read(8192):
+            md5_hash.update(chunk)
+    return md5_hash.hexdigest()
+
 @app.route('/')
 def index():
     # Get the current working directory
@@ -38,6 +46,11 @@ def do_prediction_good():
     #load test.txt and print it out
     with open('static/test.txt') as f:
         print(f.read())
+
+    explainer_file_path = "static/explainer_good.bz2"
+
+    explainer_hash = calculate_file_hash(explainer_file_path)
+    print(f"Explainer Hash: {explainer_hash}")
 
     json_data = request.get_json()
     json_data = {
