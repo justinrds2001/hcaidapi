@@ -67,7 +67,7 @@ def do_prediction_good():
     df = pd.DataFrame(json_data, index=[0])
 
     try:
-        model = tf.keras.models.load_model("static/diabetes_good_model.keras")
+        model = tf.keras.models.load_model("static/diabetes_good_model.h5")
     except Exception as e:
         print(f"An error occurred while loading the explainer: {str(e)}")
 
@@ -123,7 +123,7 @@ def do_prediction_bad():
 
     # predict
 
-    model = tf.keras.models.load_model('static/diabetes_bad_model.keras')
+    model = tf.keras.models.load_model('static/diabetes_bad_model.h5')
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
