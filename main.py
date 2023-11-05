@@ -69,7 +69,9 @@ def do_prediction_good():
     try:
         model = tf.keras.models.load_model("static/diabetes_good_model.h5")
     except Exception as e:
-        print(f"An error occurred while loading the explainer: {str(e)}")
+        print(f"An error occurred while loading the model: {str(e)}")
+
+    print("Model loaded" + model.summary())
 
     # Print current working directory
     print("Current directory: " + os.getcwd())
@@ -78,9 +80,10 @@ def do_prediction_good():
     try:
         with bz2.BZ2File("static/explainer_good.bz2", "rb") as file:
             explainer = pickle.load(file)
-        shap_values = explainer.shap_values(df)
     except Exception as e:
         print(f"An error occurred while loading the explainer: {str(e)}")
+
+    shap_values = explainer.shap_values(df)
 
     print("IT REACHED HERE")
     print("Explainer loaded" + shap_values)
