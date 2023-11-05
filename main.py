@@ -66,6 +66,11 @@ def do_prediction_good():
     print(json_data)
     df = pd.DataFrame(json_data, index=[0])
 
+    try:
+        model = tf.keras.models.load_model("static/diabetes_good_model.keras")
+    except Exception as e:
+        print(f"An error occurred while loading the explainer: {str(e)}")
+
     # Print current working directory
     print("Current directory: " + os.getcwd())
     
@@ -80,7 +85,6 @@ def do_prediction_good():
     print("IT REACHED HERE")
     print("Explainer loaded" + shap_values)
 
-    model = tf.keras.models.load_model("static/diabetes_good_model.h5")
     print("Model loaded")
         
     y_pred = model.predict(df)
