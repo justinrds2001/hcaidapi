@@ -34,13 +34,13 @@ def do_prediction_good():
     print("Current directory: " + os.getcwd())
 
     # predict
-    model = tf.keras.models.load_model('templates/diabetes_good_model.keras')
+    model = tf.keras.models.load_model('static/diabetes_good_model.keras')
         
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
     # shap
-    explainer = joblib.load(filename="templates/explainer_good.bz2")
+    explainer = joblib.load(filename="static/explainer_good.bz2")
     shap_values = explainer.shap_values(df)
 
     i = 0
@@ -73,12 +73,12 @@ def do_prediction_bad():
     df = pd.DataFrame(json_data, index=[0])
 
     # predict
-    model = tf.keras.models.load_model('templates/diabetes_bad_model.keras')
+    model = tf.keras.models.load_model('static/diabetes_bad_model.keras')
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
     # shap
-    explainer = joblib.load(filename="templates/explainer_bad.bz2")
+    explainer = joblib.load(filename="static/explainer_bad.bz2")
     shap_values = explainer.shap_values(df)
 
     i = 0
