@@ -12,14 +12,14 @@ import tensorflow as tf
 app = Flask(__name__)
 app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/') 
 
-def print_directory_structure(directory, indent=""):
+def print_directory_structure(directory):
     with os.scandir(directory) as entries:
         for entry in entries:
             if entry.is_dir():
-                print(indent + "📁 " + entry.name)  # Print the directory name
-                print_directory_structure(entry.path, indent + "  ")  # Recursively print contents of the subdirectory
+                print("📁 " + entry.path)  # Print the directory path
+                print_directory_structure(entry.path)  # Recursively print contents of the subdirectory
             else:
-                print(indent + "📃 " + entry.name)  # Print the file name
+                print("📃 " + entry.path)  # Print the file path
 
 @app.route('/')
 def index():
@@ -51,14 +51,14 @@ def do_prediction_good():
     print("Current directory: " + os.getcwd())
     
     # predict
-    model = tf.keras.models.load_model('static/diabetes_good_model.keras')
+    model = tf.keras.models.load_model('/static/diabetes_good_model.keras')
     print("Model loaded")
         
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
     # shap
-    explainer = joblib.load(filename="static/explainer_good.bz2")
+    explainer = joblib.load(filename="/static/explainer_good.bz2")
     shap_values = explainer.shap_values(df)
 
     i = 0
@@ -92,12 +92,12 @@ def do_prediction_bad():
 
     # predict
 
-    model = tf.keras.models.load_model('static/diabetes_bad_model.keras')
+    model = tf.keras.models.load_model('/static/diabetes_bad_model.keras')
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
     # shap
-    explainer = joblib.load(filename="static/explainer_bad.bz2")
+    explainer = joblib.load(filename="/static/explainer_bad.bz2")
     shap_values = explainer.shap_values(df)
 
     i = 0
