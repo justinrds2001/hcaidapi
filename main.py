@@ -70,9 +70,12 @@ def do_prediction_good():
     print("Current directory: " + os.getcwd())
     
     # predict
-    with bz2.BZ2File("static/explainer_good.bz2", "rb") as file:
-        explainer = pickle.load(file)
-    shap_values = explainer.shap_values(df)
+    try:
+        with bz2.BZ2File("static/explainer_good.bz2", "rb") as file:
+            explainer = pickle.load(file)
+        shap_values = explainer.shap_values(df)
+    except Exception as e:
+        print(f"An error occurred while loading the explainer: {str(e)}")
 
     print("IT REACHED HERE")
     print("Explainer loaded" + shap_values)
