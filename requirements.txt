@@ -7,3 +7,4 @@ tensorflow>=2.13.0
 tensorflow-estimator>=2.13.0
 shap>=0.42.0
 matplotlib>=3.4.3
+whitenoise>=6.6.0

@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, render_template, request
+from whitenoise import WhiteNoise  # Import WhiteNoise
 import pandas as pd
 import joblib
 import shap
@@ -9,6 +10,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 
 app = Flask(__name__)
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/') 
 
 def print_directories_recursive(directory):
     for entry in os.scandir(directory):
@@ -48,14 +50,14 @@ def do_prediction_good():
     print("Current directory: " + os.getcwd())
     
     # predict
-    model = tf.keras.models.load_model('diabetes_good_model.keras')
+    model = tf.keras.models.load_model('static/diabetes_good_model.keras')
     print("Model loaded")
         
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
     # shap
-    explainer = joblib.load(filename="explainer_good.bz2")
+    explainer = joblib.load(filename="static/explainer_good.bz2")
     shap_values = explainer.shap_values(df)
 
     i = 0
@@ -89,12 +91,12 @@ def do_prediction_bad():
 
     # predict
 
-    model = tf.keras.models.load_model('diabetes_bad_model.keras')
+    model = tf.keras.models.load_model('static/diabetes_bad_model.keras')
     y_pred = model.predict(df)
     pred_diabetes = int(y_pred[0])
     
     # shap
-    explainer = joblib.load(filename="explainer_bad.bz2")
+    explainer = joblib.load(filename="static/explainer_bad.bz2")
     shap_values = explainer.shap_values(df)
 
     i = 0
