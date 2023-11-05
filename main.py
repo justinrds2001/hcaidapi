@@ -12,21 +12,22 @@ import tensorflow as tf
 app = Flask(__name__)
 app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/') 
 
-def print_directories_recursive(directory):
-    for entry in os.scandir(directory):
-        if entry.is_dir():
-            print("📁 " + entry.name)  # Print the directory name
-            print_directories_recursive(entry.path)
-        else:
-            print("📃 " + entry.name)  # Print the file name
+def print_directory_structure(directory, indent=""):
+    with os.scandir(directory) as entries:
+        for entry in entries:
+            if entry.is_dir():
+                print(indent + "📁 " + entry.name)  # Print the directory name
+                print_directory_structure(entry.path, indent + "  ")  # Recursively print contents of the subdirectory
+            else:
+                print(indent + "📃 " + entry.name)  # Print the file name
 
 @app.route('/')
 def index():
     # Get the current working directory
     current_directory = os.getcwd()
 
-    # Print directories and filenames recursively
-    print_directories_recursive(current_directory)
+    # Print the entire directory structure
+    print_directory_structure(current_directory)
 
     return render_template('index.html')
 
