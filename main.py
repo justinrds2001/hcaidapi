@@ -73,10 +73,12 @@ def do_prediction_bad():
     df = pd.DataFrame(json_data, index=[0])
 
     # predict
+    shap_values = bad_explainer.shap_values(df)
 
     y_pred = bad_model.predict(df)
     pred_diabetes = int(y_pred[0])
-    shap_values = bad_explainer.shap_values(df)
+    
+    # shap
     i = 0
     shap.force_plot(bad_explainer.expected_value[i], shap_values[i], df.iloc[i], matplotlib=True, show=False, plot_cmap=['#77dd77', '#f99191'])
 
