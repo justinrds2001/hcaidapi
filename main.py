@@ -4,7 +4,6 @@ import pandas as pd
 import shap
 import base64
 import io
-import pickle
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import bz2
@@ -28,16 +27,9 @@ except Exception as e:
     print("model loading error:", e)
     exit()
 
-try:
-    # with open("static/explainer_bad.pkl", "rb") as explainer1:
-    #     bad_explainer = pickle.load(explainer1)
-    with open("static/explainer_good.pkl", "rb") as explainer2:
-        good_explainer = pickle.load(explainer2)
-    # bad_explainer = joblib.load("static/explainer_bad.bz2")
-    # good_explainer = joblib.load("static/explainer_good.bz2")
-except Exception as e:
-    print("explainer loading error:", e)
-    exit()
+X_train = pd.read_csv("static/X_train.csv")
+good_explainer = shap.KernelExplainer(good_model, X_train.iloc[:50, :])
+bad_explainer = shap.KernelExplainer(bad_model, X_train.iloc[:50, :])
 
 app = Flask(__name__)
 app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/') 
