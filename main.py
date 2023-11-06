@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, render_template, request
+from flask_cors import CORS
 from whitenoise import WhiteNoise  # Import WhiteNoise
 import pandas as pd
 import shap
@@ -6,7 +7,6 @@ import base64
 import io
 import matplotlib.pyplot as plt
 import tensorflow as tf
-import bz2
 
 def fix_json(obj):
     return {
@@ -32,6 +32,7 @@ good_explainer = shap.KernelExplainer(good_model, X_train.iloc[:50, :])
 bad_explainer = shap.KernelExplainer(bad_model, X_train.iloc[:50, :])
 
 app = Flask(__name__)
+cors = CORS(app)
 app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/') 
 
 @app.route('/')
