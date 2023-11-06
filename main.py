@@ -33,6 +33,8 @@ try:
     #     bad_explainer = pickle.load(explainer1)
     with open("static/explainer_good.pkl", "rb") as explainer2:
         good_explainer = pickle.load(explainer2)
+    # bad_explainer = joblib.load("static/explainer_bad.bz2")
+    # good_explainer = joblib.load("static/explainer_good.bz2")
 except Exception as e:
     print("explainer loading error:", e)
     exit()
