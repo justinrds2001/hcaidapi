@@ -29,7 +29,6 @@ except Exception as e:
 
 X_train = pd.read_csv("static/X_train.csv")
 good_explainer = shap.KernelExplainer(good_model, X_train.iloc[:50, :])
-bad_explainer = shap.KernelExplainer(bad_model, X_train.iloc[:50, :])
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -73,23 +72,11 @@ def do_prediction_bad():
     df = pd.DataFrame(json_data, index=[0])
 
     # predict
-    shap_values = bad_explainer.shap_values(df)
-
     y_pred = bad_model.predict(df)
     pred_diabetes = int(y_pred[0])
     
-    # shap
-    i = 0
-    shap.force_plot(bad_explainer.expected_value[i], shap_values[i], df.iloc[i], matplotlib=True, show=False, plot_cmap=['#77dd77', '#f99191'])
-
-    # Save the plot as a Base64 encoded string
-    buf = io.BytesIO()
-    plt.savefig(buf, format="png", dpi=150, bbox_inches='tight')
-    buf.seek(0)
-    base64_image = base64.b64encode(buf.read()).decode("utf-8")
-
     result_map = {0: False, 1: True}
-    return jsonify({'diabetes': result_map[pred_diabetes], 'image_base64': base64_image})
+    return jsonify({'diabetes': result_map[pred_diabetes], 'image_base64': ""})
 
 if __name__ == '__main__':
   app.run(port=5000)
